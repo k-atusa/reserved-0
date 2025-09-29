@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 대시보드</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 관리자 배너 */
+        .admin-banner {
+            background-color: #dc3545; /* 붉은색 계열로 관리자 느낌 강조 */
+            color: white;
+            padding: 25px 15px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .admin-banner h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        .admin-banner p {
+            margin: 5px 0 0;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 0 15px 30px 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #343a40;
+            margin-bottom: 15px;
+        }
+        
+        /* 테이블 컨테이너 (스크롤 가능하도록) */
+        .table-container {
+            overflow-x: auto; /* 가로 스크롤 허용 (모바일/다수 사용자 대응) */
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 상태 테이블 스타일 */
+        .status-table {
+            width: 100%;
+            min-width: 600px; /* 최소 너비 설정으로 모바일에서도 가로 스크롤이 되도록 유도 */
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        /* 테이블 헤더 (사용자 이름) */
+        .status-table th {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 15px;
+            position: sticky; /* 가로 스크롤 시 세로축 고정 */
+            left: 0; 
+            z-index: 10;
+        }
+        .status-table th:not(:first-child) {
+            background-color: #3498db; /* 사용자 열 헤더는 다른 색상 */
+            text-align: center;
+        }
+
+        /* 테이블 바디 (체크리스트 항목) */
+        .status-table td {
+            padding: 10px 15px;
+            border: 1px solid #dee2e6;
+            vertical-align: middle;
+        }
+        
+        /* 첫 번째 열 (체크리스트 이름) 고정 */
+        .status-table td:first-child {
+            background-color: #f8f9fa; /* 행 헤더 배경색 */
+            font-weight: 500;
+            position: sticky;
+            left: 0;
+            z-index: 5;
+            white-space: nowrap; /* 항목 이름이 줄바꿈되지 않도록 */
+        }
+        
+        /* 체크 상태 아이콘 */
+        .status-cell {
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        /* 체크 완료 */
+        .status-checked {
+            color: #28a745; /* 녹색 */
+        }
+
+        /* 미 체크 */
+        .status-unchecked {
+            color: #dc3545; /* 붉은색 */
+        }
+        
+        .no-user-message {
+            padding: 30px;
+            text-align: center;
+            color: #6c757d;
+            background: white;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="admin-banner">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1>🔑 관리자 대시보드</h1>
+                <p style="margin: 0; font-size: 1rem; opacity: 0.9;">신입들의 온보딩 체크리스트 상태를 한눈에 확인하세요.</p>
+            </div>
+            <a href="{{ url_for('admin_logout') }}" style="text-decoration: none;">
+                <button style="background: white; color: #dc3545; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;">로그아웃</button>
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <h2>사용자별 체크리스트 완료 상태</h2>
+        
+        {% if user_names %}
+        <div class="table-container">
+            <table class="status-table">
+                <thead>
+                    <tr>
+                        <th>체크리스트 항목</th> 
+                        
+                        {% for user in user_names %}
+                        <th>{{ user }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key in checklist_keys %}
+                    <tr>
+                        <td>{{ key }}</td> 
+                        
+                        {% for user in user_names %}
+                        <td class="status-cell">
+                            {% if status_map[user][key] %}
+                                <span class="status-checked">✔</span>
+                            {% else %}
+                                <span class="status-unchecked">❌</span>
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <div class="no-user-message">
+                아직 등록된 신입 사용자가 없습니다.
+            </div>
+        {% endif %}
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>환영합니다</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #e9ecef;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        h1 {
+            color: #28a745; /* 녹색 계열 */
+            margin-bottom: 10px;
+        }
+        p {
+            color: #333;
+            font-size: 1.2rem;
+        }
+        .action-link {
+            margin-top: 30px;
+        }
+        .action-link a {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .action-link a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌟 환영합니다, {{ name }}님!</h1>
+    <p>신입 관리 웹앱의 메인 페이지입니다. 이제부터 {{ name }}님을 기억할게요.</p>
+    <p>여기에 신입들을 위한 공지, 일정, 교육 자료 등을 배치할 예정입니다.</p>
+    
+    <div class="action-link">
+        <a href="{{ url_for('logout') }}">테스트를 위해 로그아웃하기 (쿠키 삭제)</a>
+    </div>
+</body>
+</html>

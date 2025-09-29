@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신입 관리 웹앱 - 환영합니다</title>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --text-color: #333;
+            --background-color: #f4f7f6;
+            --overlay-color: rgba(0, 0, 0, 0.45); /* 가독성을 위해 조금 더 어둡게 */
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+        }
+
+        /* === 1. 사진으로 채워진 페이지 배경 (수정됨) === */
+        .main-container {
+            position: relative;
+            height: 100vh; /* 전체 화면 높이 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            
+            /* 배경 이미지 설정 */
+            /* 🌟 여기에 회사 분위기를 나타내는 고화질 사진 URL을 넣어주세요. */
+            background-image: url('https://home.army.mil/humphreys/thumbnails/large/9016/7091/8100/Aerial_Shot_2018.jpg');
+            background-size: cover; /* 이미지가 컨테이너를 가득 채우도록 */
+            background-position: center; /* 이미지 중앙 정렬 */
+            background-repeat: no-repeat; /* 이미지 반복 없음 */
+        }
+
+        /* 이미지 위에 어두운 오버레이를 씌워 텍스트 가독성 높임 */
+        .main-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--overlay-color);
+            z-index: 1;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            color: white;
+            padding: 20px;
+        }
+
+        .admin-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 3;
+        }
+        .admin-link button {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .admin-link button:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.5); /* 텍스트 그림자 추가 */
+        }
+        p.subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .invite-form input[type="text"] {
+            padding: 14px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 220px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .invite-form button[type="submit"] {
+            padding: 14px 28px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .invite-form button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            p.subtitle {
+                font-size: 1.1rem;
+            }
+            .invite-form {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+            .invite-form input[type="text"] {
+                width: 80%;
+                margin-right: 0;
+            }
+            .invite-form button[type="submit"] {
+                width: calc(80% + 28px); /* padding 고려 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        
+        <div class="admin-link">
+            <a href="{{ url_for('admin_login') }}">
+                <button>관리자 🔑</button>
+            </a>
+        </div>
+
+        <div class="content">
+            <h1>👋 새로운 시작을 환영합니다!</h1>
+            <p class="subtitle">신입 관리 웹앱에 접속하려면 초대 코드를 입력하거나, 이름을 입력해 로그인하세요.</p>
+            
+            <form class="invite-form" method="POST" action="{{ url_for('join') }}">
+                <input type="text" name="invite_code" placeholder="초대 코드 또는 이름 입력" required>
+                <button type="submit">접속하기</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

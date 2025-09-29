@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신입 온보딩 대시보드</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 30px 15px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        .main-content {
+            padding: 20px 15px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        .section-title {
+            font-size: 1.4rem;
+            color: #0056b3;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+        
+        .checklist-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+        }
+        .checklist-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .checklist-header {
+            width: 100%;
+            background: #f8f9fa;
+            border: none;
+            text-align: left;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .checklist-title-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .checklist-header input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .checklist-title {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .checklist-toggle-icon {
+            font-size: 1rem;
+            transition: transform 0.3s;
+        }
+        .checklist-item.active .checklist-toggle-icon {
+            transform: rotate(180deg);
+        }
+        .checklist-content {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+            background: #fff;
+            color: #555;
+            border-top: 1px solid #eee;
+        }
+        .checklist-item.active .checklist-content {
+            max-height: 150px;
+            padding: 20px;
+        }
+
+
+        .faq-item {
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .faq-question {
+            width: 100%;
+            background: #f8f9fa;
+            border: none;
+            text-align: left;
+            padding: 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-question:after {
+            content: '▼';
+            font-size: 0.8rem;
+        }
+        .faq-answer {
+            padding: 0 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+            background: #fff;
+            line-height: 1.6;
+        }
+        .faq-item.active .faq-question:after {
+            content: '▲';
+        }
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            padding: 15px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .action-button {
+            display: block;
+            text-decoration: none;
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .action-button:hover {
+            transform: translateY(-2px);
+        }
+        .contacts-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        .logout-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div class="header">
+        <h1>🚀 {{ name }}님, 새로운 시작을 응원합니다!</h1>
+    </div>
+
+    <div class="main-content">
+        
+        <div id="checklist-section" class="section checklist">
+            <h2 class="section-title">✅ 온보딩 체크리스트</h2>
+            {% for key, data in checklist.items() %}
+            <div class="checklist-item" id="checklist-item-{{ loop.index }}">
+                <div class="checklist-header">
+                    <div class="checklist-title-section">
+                        <input type="checkbox" 
+                               id="item-checkbox-{{ loop.index }}" 
+                               onchange="updateChecklist('{{ key }}', this.checked)"
+                               {% if data.checked %}checked{% endif %}>
+                        <label for="item-checkbox-{{ loop.index }}" class="checklist-title">{{ key }}</label>
+                    </div>
+                    <span class="checklist-toggle-icon">▼</span>
+                </div>
+                <div class="checklist-content">
+                    <p>{{ data.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div id="faq-section" class="section faq">
+            <h2 class="section-title">❓ 자주 묻는 질문 (FAQ)</h2>
+            {% for item in faq %}
+            <div class="faq-item">
+                <button class="faq-question">{{ item.title }}</button>
+                <div class="faq-answer">
+                    <p>{{ item.content }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div id="settings-section" class="section settings">
+            <h2 class="section-title">⚙️ 기타 메뉴</h2>
+            <div class="footer-links">
+                <a href="{{ url_for('contacts') }}" class="action-button contacts-btn">☎️ 팀 연락처 바로가기</a>
+                <a href="{{ url_for('logout') }}" class="action-button logout-btn">로그아웃</a>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        function updateChecklist(itemKey, isChecked) {
+            fetch('/update_checklist', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    item_key: itemKey,
+                    is_checked: isChecked,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('체크리스트 업데이트 성공:', data);
+                } else {
+                    console.error('체크리스트 업데이트 실패:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('네트워크 오류:', error);
+            });
+        }
+
+        // === 아코디언 기능 (수정됨) ===
+        function setupAccordion(itemSelector, headerSelector) {
+            const items = document.querySelectorAll(itemSelector);
+            items.forEach(item => {
+                const header = item.querySelector(headerSelector);
+                
+                // 체크리스트 항목에만 있는 체크박스를 찾음
+                const checkbox = header.querySelector('input[type="checkbox"]');
+                
+                // **오류 수정**: 체크박스가 있는 경우에만 이벤트 리스너를 추가
+                if (checkbox) {
+                    checkbox.addEventListener('click', function(event) {
+                        // 체크박스 클릭 시 아코디언이 토글되지 않도록 함
+                        event.stopPropagation();
+                    });
+                }
+
+                // 헤더(제목 부분)를 클릭하면 active 클래스를 토글
+                header.addEventListener('click', () => {
+                    item.classList.toggle('active');
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // 체크리스트 아코디언 실행
+            setupAccordion('.checklist-item', '.checklist-header');
+            
+            // FAQ 아코디언 실행
+            setupAccordion('.faq-item', '.faq-question');
+        });
+    </script>
+</body>
+</html>
